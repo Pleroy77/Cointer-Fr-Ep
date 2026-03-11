@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Supports pédagogiques — Séances 3, 4, 5 — Co-intervention CIEL</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:#fff; color:#1a1a1a; font-size:13px; }
+.page { max-width:800px; margin:0 auto; padding:20px 24px; }
+.doc-label { background:#0a66c2; color:white; padding:6px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-radius:4px; display:inline-block; margin-bottom:6px; }
+h2 { font-size:17px; font-weight:700; color:#1a1a1a; margin-bottom:4px; }
+.sous-titre { font-size:12px; color:#666; margin-bottom:16px; }
+.sep { border:none; border-top:2px dashed #ddd; margin:36px 0; }
+.ligne { border-bottom:1px solid #ddd; height:22px; }
+.eleve-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+.eleve-field { border-bottom:1.5px solid #333; padding-bottom:2px; }
+.eleve-field label { font-size:10px; color:#888; display:block; text-transform:uppercase; letter-spacing:0.5px; }
+
+/* QUIZ */
+.quiz-item { margin-bottom:14px; padding:12px 14px; border:1.5px solid #e0e0e0; border-radius:6px; }
+.quiz-q { font-size:13px; font-weight:600; margin-bottom:8px; line-height:1.5; }
+.quiz-choices { display:flex; gap:20px; }
+.choice { display:flex; align-items:center; gap:6px; font-size:13px; }
+.choice-box { width:16px; height:16px; border:1.5px solid #555; border-radius:3px; flex-shrink:0; }
+.quiz-justif { margin-top:8px; font-size:11px; color:#888; }
+.quiz-justif .ligne-j { border-bottom:1px dashed #ccc; height:18px; margin-top:2px; }
+
+/* CAS PRATIQUES */
+.cas { border:1.5px solid #ddd; border-radius:6px; overflow:hidden; margin-bottom:16px; }
+.cas-header { background:#1a3a6e; color:white; padding:8px 14px; display:flex; justify-content:space-between; align-items:center; }
+.cas-header .cas-num { font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; }
+.cas-header .cas-title { font-size:13px; font-weight:700; }
+.cas-body { padding:12px 14px; }
+.cas-scenario { background:#f8f9fa; border-left:3px solid #1a3a6e; padding:8px 12px; margin-bottom:10px; font-size:12.5px; line-height:1.6; border-radius:0 4px 4px 0; }
+.cas-questions table { width:100%; border-collapse:collapse; }
+.cas-questions th { background:#eef2f9; font-size:11px; font-weight:700; padding:6px 8px; border:1px solid #ccc; text-align:center; }
+.cas-questions td { border:1px solid #ddd; padding:4px 8px; height:36px; vertical-align:top; font-size:12px; }
+
+/* FAUX EMAIL */
+.email-container { border:2px solid #c62828; border-radius:8px; overflow:hidden; margin-bottom:20px; }
+.email-warning { background:#c62828; color:white; padding:6px 14px; font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+.email-header-zone { background:#f8f9fa; border-bottom:1px solid #ddd; padding:10px 16px; }
+.email-field { display:flex; gap:8px; font-size:12px; margin-bottom:4px; }
+.email-field strong { color:#555; min-width:70px; }
+.email-field .value { color:#1a1a1a; }
+.email-field .suspect { color:#c62828; text-decoration:underline dotted; cursor:default; }
+.email-subject { font-size:14px; font-weight:700; padding:8px 16px; border-bottom:1px solid #ddd; background:#fff3e0; }
+.email-body-zone { padding:16px; font-size:13px; line-height:1.8; }
+.email-body-zone .suspect-text { background:#fff3e0; border-bottom:2px solid #ff9800; cursor:default; }
+.email-body-zone .suspect-link { color:#0000ee; text-decoration:underline; background:#fdecea; padding:0 2px; border-radius:2px; }
+.email-signature { margin-top:16px; padding-top:12px; border-top:1px solid #eee; font-size:12px; color:#555; }
+.indices-zone { background:#fffde7; border:1.5px solid #f9a825; border-radius:0 0 6px 6px; padding:12px 16px; }
+.indices-title { font-size:11px; font-weight:700; color:#c17a00; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+.indices-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.indice-item { display:flex; align-items:flex-start; gap:6px; font-size:12px; }
+.indice-num { width:20px; height:20px; background:#f9a825; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
+.indice-ligne { border-bottom:1px solid #ccc; flex:1; height:18px; }
+
+/* AUDIT */
+.audit-section { margin-bottom:14px; }
+.audit-section-title { background:#1a3a6e; color:white; padding:6px 12px; font-size:12px; font-weight:700; border-radius:4px; margin-bottom:8px; }
+.audit-item { display:flex; gap:10px; align-items:flex-start; padding:6px 8px; border:1px solid #eee; border-radius:4px; margin-bottom:4px; }
+.audit-check { display:flex; gap:8px; }
+.audit-check .box-ok { width:20px; height:20px; border:1.5px solid #1e7e34; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#1e7e34; flex-shrink:0; }
+.audit-check .box-nok { width:20px; height:20px; border:1.5px solid #c62828; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#c62828; flex-shrink:0; }
+.audit-check .box-na { width:20px; height:20px; border:1.5px solid #999; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#999; flex-shrink:0; }
+.audit-label { font-size:12.5px; flex:1; padding-top:1px; }
+.audit-note { font-size:11px; color:#666; margin-top:2px; }
+.audit-score { background:#f5f5f5; border:1.5px solid #ddd; border-radius:6px; padding:10px 14px; margin-top:10px; display:flex; justify-content:space-between; align-items:center; }
+.audit-score .score-label { font-size:13px; font-weight:700; }
+.audit-score .score-value { font-size:22px; font-weight:700; color:#0a66c2; }
+
+/* VEILLE */
+.veille-table { width:100%; border-collapse:collapse; margin-top:8px; }
+.veille-table th { background:#0a66c2; color:white; font-size:11px; font-weight:700; padding:7px 10px; border:1px solid #dce6f0; text-align:left; }
+.veille-table td { border:1px solid #ddd; padding:6px 10px; height:32px; font-size:12px; }
+.veille-table tr:nth-child(even) td { background:#f8f9fa; }
+
+/* ÉVALUATION ÉLÈVE */
+.eval-comp { border:1.5px solid #ddd; border-radius:6px; overflow:hidden; margin-bottom:14px; }
+.eval-comp-header { background:#1a3a6e; color:white; padding:8px 14px; font-size:13px; font-weight:700; display:flex; justify-content:space-between; }
+.eval-comp-body { padding:10px 14px; }
+.auto-eval { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-bottom:8px; }
+.ae-level { border:1.5px solid #ddd; border-radius:4px; padding:6px 4px; text-align:center; cursor:default; }
+.ae-level .ae-icon { font-size:16px; display:block; margin-bottom:2px; }
+.ae-level .ae-label { font-size:10px; color:#555; }
+.ae-level.l1 { border-color:#c62828; background:#fdecea; }
+.ae-level.l2 { border-color:#f9a825; background:#fff8e1; }
+.ae-level.l3 { border-color:#0a66c2; background:#e8f0fe; }
+.ae-level.l4 { border-color:#1e7e34; background:#e6f4ea; }
+.ae-chose { font-size:11px; color:#888; font-style:italic; margin-bottom:6px; }
+.comment-zone label { font-size:11px; color:#666; display:block; margin-bottom:3px; }
+
+@media print {
+  .sep { page-break-before:always; margin:0; border:none; }
+  .email-warning, .email-subject, .cas-header, .doc-label, .eval-comp-header, .audit-section-title { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .ae-level { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+.page-footer { margin-top:28px; border-top:1px solid #eee; padding-top:8px; font-size:10px; color:#aaa; text-align:center; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ════════════════════════════════ -->
+<!-- QUIZ RGPD — SÉANCE 3 -->
+<!-- ════════════════════════════════ -->
+<div class="doc-label">Séance 3 — Support élève</div>
+<h2>Quiz — Le RGPD et mes droits numériques</h2>
+<div class="sous-titre">Réponds aux questions suivantes. Pour chaque réponse, justifie brièvement ton choix.</div>
+<div class="eleve-row">
+  <div class="eleve-field"><label>Nom · Prénom</label></div>
+  <div class="eleve-field"><label>Classe · Date</label></div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-q">1. Le RGPD (Règlement Général sur la Protection des Données) s'applique uniquement aux grandes entreprises de plus de 500 salariés.</div>
+  <div class="quiz-choices">
+    <div class="choice"><div class="choice-box"></div> Vrai</div>
+    <div class="choice"><div class="choice-box"></div> Faux</div>
+  </div>
+  <div class="quiz-justif">Justification : <div class="ligne-j"></div></div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-q">2. J'ai le droit de demander à une entreprise de supprimer toutes les données qu'elle possède sur moi, sans exception.</div>
+  <div class="quiz-choices">
+    <div class="choice"><div class="choice-box"></div> Vrai</div>
+    <div class="choice"><div class="choice-box"></div> Faux</div>
+  </div>
+  <div class="quiz-justif">Justification : <div class="ligne-j"></div></div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-q">3. Un technicien CIEL qui partage les données personnelles d'un client avec un collègue non autorisé peut être sanctionné.</div>
+  <div class="quiz-choices">
+    <div class="choice"><div class="choice-box"></div> Vrai</div>
+    <div class="choice"><div class="choice-box"></div> Faux</div>
+  </div>
+  <div class="quiz-justif">Justification : <div class="ligne-j"></div></div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-q">4. En cas de fuite de données, une entreprise a 72 heures pour la signaler à la CNIL.</div>
+  <div class="quiz-choices">
+    <div class="choice"><div class="choice-box"></div> Vrai</div>
+    <div class="choice"><div class="choice-box"></div> Faux</div>
+  </div>
+  <div class="quiz-justif">Justification : <div class="ligne-j"></div></div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-q">5. Le non-respect du RGPD peut entraîner une amende allant jusqu'à 20 millions d'euros ou 4% du chiffre d'affaires mondial.</div>
+  <div class="quiz-choices">
+    <div class="choice"><div class="choice-box"></div> Vrai</div>
+    <div class="choice"><div class="choice-box"></div> Faux</div>
+  </div>
+  <div class="quiz-justif">Justification : <div class="ligne-j"></div></div>
+</div>
+
+<div class="quiz-item">
+  <div class="quiz-q">6. Je peux demander à consulter les données qu'une entreprise possède sur moi (droit d'accès) à tout moment et gratuitement.</div>
+  <div class="quiz-choices">
+    <div class="choice"><div class="choice-box"></div> Vrai</div>
+    <div class="choice"><div class="choice-box"></div> Faux</div>
+  </div>
+  <div class="quiz-justif">Justification : <div class="ligne-j"></div></div>
+</div>
+
+<!-- CAS PRATIQUES RGPD -->
+<div style="margin-top:24px;">
+<div class="doc-label" style="background:#1a3a6e;">Séance 3 — Cas pratiques RGPD</div>
+<h2 style="margin-top:8px;">Cas pratiques — Analyse de situations professionnelles</h2>
+<div class="sous-titre">Analysez la situation de votre groupe et répondez aux questions dans le tableau.</div>
+</div>
+
+<div class="cas">
+  <div class="cas-header">
+    <div class="cas-num">Cas n°1</div>
+    <div class="cas-title">Le technicien bavard</div>
+  </div>
+  <div class="cas-body">
+    <div class="cas-scenario">Mathieu, technicien CIEL en stage, répare l'ordinateur d'un client. Il remarque que le client a des difficultés financières (relevé bancaire ouvert à l'écran). Le soir, il en parle à ses amis en citant le nom du client.</div>
+    <div class="cas-questions">
+      <table>
+        <tr><th>Infraction / problème</th><th>Article RGPD / loi concerné</th><th>Sanction possible</th><th>Bonne pratique</th></tr>
+        <tr><td style="height:48px;"></td><td></td><td></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="cas">
+  <div class="cas-header">
+    <div class="cas-num">Cas n°2</div>
+    <div class="cas-title">Le mot de passe partagé</div>
+  </div>
+  <div class="cas-body">
+    <div class="cas-scenario">Léa, technicienne réseau, donne son mot de passe d'accès au serveur à un collègue intérimaire pour qu'il puisse « dépanner rapidement » pendant son absence. Elle ne signale rien à son responsable.</div>
+    <div class="cas-questions">
+      <table>
+        <tr><th>Infraction / problème</th><th>Article RGPD / loi concerné</th><th>Sanction possible</th><th>Bonne pratique</th></tr>
+        <tr><td style="height:48px;"></td><td></td><td></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="cas">
+  <div class="cas-header">
+    <div class="cas-num">Cas n°3</div>
+    <div class="cas-title">La sauvegarde personnelle</div>
+  </div>
+  <div class="cas-body">
+    <div class="cas-scenario">Tom copie une base de données clients de son entreprise sur sa clé USB personnelle pour « travailler depuis chez lui ». La clé USB est perdue dans le bus deux jours plus tard.</div>
+    <div class="cas-questions">
+      <table>
+        <tr><th>Infraction / problème</th><th>Article RGPD / loi concerné</th><th>Sanction possible</th><th>Bonne pratique</th></tr>
+        <tr><td style="height:48px;"></td><td></td><td></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════ -->
+<!-- FAUX EMAIL PHISHING — SÉANCE 4 -->
+<!-- ════════════════════════════════ -->
+<div class="sep"></div>
+<div class="doc-label" style="background:#c62828;">Séance 4 — Faux e-mail (exercice)</div>
+<h2 style="margin-top:8px;">Analyse d'un e-mail suspect</h2>
+<div class="sous-titre">Lis attentivement cet e-mail. Entoure ou surligne les indices qui te semblent suspects, puis liste-les dans la zone prévue.</div>
+
+<div class="email-container">
+  <div class="email-warning">⚠ Document pédagogique — E-mail fictif créé pour un exercice · Ne pas utiliser en dehors de la classe</div>
+  <div class="email-header-zone">
+    <div class="email-field"><strong>De :</strong> <span class="value suspect">support-securite@microsoft-helpdesk-fr.net</span></div>
+    <div class="email-field"><strong>À :</strong> <span class="value">votre.adresse@lycee-louislumiere.fr</span></div>
+    <div class="email-field"><strong>Date :</strong> <span class="value">Lundi 14 octobre 2024, 02:47</span></div>
+    <div class="email-field"><strong>Réponse à :</strong> <span class="value suspect">collect-data@free-form.ru</span></div>
+  </div>
+  <div class="email-subject">⚠️ URGENT — Votre compte Microsoft a été compromis — Action requise dans 24h</div>
+  <div class="email-body-zone">
+    <p>Cher(e) utilisateur(trice),</p>
+    <br>
+    <p>Notre <span class="suspect-text">système de sécurité automatique</span> a détecté une <span class="suspect-text">connexion suspecte</span> depuis un pays étranger sur votre compte Microsoft associé à cette adresse e-mail.</p>
+    <br>
+    <p>Pour <span class="suspect-text">éviter la suppression définitive de votre compte dans les 24 heures</span>, vous devez <strong>impérativement</strong> confirmer vos identifiants en cliquant sur le lien ci-dessous :</p>
+    <br>
+    <p style="text-align:center; padding:10px; background:#f5f5f5; border-radius:4px;">
+      <span class="suspect-link">http://microsoft-verification-compte-fr.xyz/login?token=AB7392&redirect=collect</span>
+    </p>
+    <br>
+    <p>Vous devrez fournir :</p>
+    <ul style="margin-left:20px; margin-top:4px;">
+      <li><span class="suspect-text">Votre adresse e-mail et mot de passe Microsoft</span></li>
+      <li><span class="suspect-text">Votre numéro de téléphone pour la « vérification »</span></li>
+      <li>Votre date de naissance</li>
+    </ul>
+    <br>
+    <p>Si vous ne confirmez pas dans les <span class="suspect-text">24 heures</span>, votre compte sera <span class="suspect-text">définitivement supprimé et toutes vos données perdues</span>.</p>
+    <br>
+    <p>Cordialement,</p>
+    <div class="email-signature">
+      <strong>L'équipe Sécurité Micosoft</strong><br>
+      <span style="font-size:11px; color:#888;">Microsoft Corporation · One Microsoft Way · Redmond, WA</span><br>
+      <span style="font-size:11px; color:#c62828;">support@microsoft-helpdesk-fr.net</span>
+    </div>
+  </div>
+  <div class="indices-zone">
+    <div class="indices-title">📋 Liste les indices suspects que tu as repérés :</div>
+    <div class="indices-grid">
+      <div class="indice-item"><div class="indice-num">1</div><div class="indice-ligne"></div></div>
+      <div class="indice-item"><div class="indice-num">2</div><div class="indice-ligne"></div></div>
+      <div class="indice-item"><div class="indice-num">3</div><div class="indice-ligne"></div></div>
+      <div class="indice-item"><div class="indice-num">4</div><div class="indice-ligne"></div></div>
+      <div class="indice-item"><div class="indice-num">5</div><div class="indice-ligne"></div></div>
+      <div class="indice-item"><div class="indice-num">6</div><div class="indice-ligne"></div></div>
+    </div>
+    <p style="margin-top:10px; font-size:12px; font-weight:600;">Que fais-tu si tu reçois cet e-mail en entreprise ?</p>
+    <div class="ligne" style="margin-top:4px;"></div><div class="ligne"></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════ -->
+<!-- GRILLE D'AUDIT — SÉANCE 4 -->
+<!-- ════════════════════════════════ -->
+<div class="sep"></div>
+<div class="doc-label" style="background:#1a3a6e;">Séance 4 — Grille d'audit</div>
+<h2 style="margin-top:8px;">Audit de sécurité de mon identité numérique</h2>
+<div class="sous-titre">Évalue le profil fictif qui t'a été attribué. Pour chaque critère, coche la case correspondante.</div>
+<div class="eleve-row">
+  <div class="eleve-field"><label>Nom · Prénom</label></div>
+  <div class="eleve-field"><label>Profil fictif analysé</label></div>
+</div>
+
+<div style="display:flex; gap:16px; margin-bottom:12px; font-size:11px;">
+  <div style="display:flex; align-items:center; gap:4px;"><div style="width:16px;height:16px;border:1.5px solid #1e7e34;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#1e7e34;">✓</div> Conforme</div>
+  <div style="display:flex; align-items:center; gap:4px;"><div style="width:16px;height:16px;border:1.5px solid #c62828;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c62828;">✗</div> Non conforme</div>
+  <div style="display:flex; align-items:center; gap:4px;"><div style="width:16px;height:16px;border:1.5px solid #999;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;">?</div> Non vérifié / NA</div>
+</div>
+
+<div class="audit-section">
+  <div class="audit-section-title">🔐 Mots de passe et authentification</div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Le mot de passe est robuste (12 caractères min, majuscules, chiffres, symboles)</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">La double authentification (2FA) est activée sur les comptes sensibles</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Les mots de passe ne sont pas réutilisés sur plusieurs services</div></div>
+  </div>
+</div>
+
+<div class="audit-section">
+  <div class="audit-section-title">👁 Confidentialité et données exposées</div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Les paramètres de confidentialité des réseaux sociaux sont restreints au maximum</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Aucune donnée sensible (adresse, téléphone, lieu de travail) n'est visible publiquement</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">La géolocalisation est désactivée sur les applications non essentielles</div></div>
+  </div>
+</div>
+
+<div class="audit-section">
+  <div class="audit-section-title">🖥 Image professionnelle en ligne</div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Aucun contenu inapproprié (photo, commentaire, opinion) n'est visible publiquement</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Le profil LinkedIn (ou équivalent) est soigné et à jour</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Les pseudos utilisés sont distincts entre usage personnel et professionnel</div></div>
+  </div>
+</div>
+
+<div class="audit-section">
+  <div class="audit-section-title">⚠ Exposition aux fuites de données</div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">L'adresse e-mail n'apparaît pas dans une base de données compromise (have i been pwned)</div></div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-check"><div class="box-ok">✓</div><div class="box-nok">✗</div><div class="box-na">?</div></div>
+    <div><div class="audit-label">Aucun document personnel (CV, RIB, CNI) n'est accessible via une recherche Google</div></div>
+  </div>
+</div>
+
+<div class="audit-score">
+  <div class="score-label">Score de conformité estimé :</div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <div style="font-size:13px; color:#666;">_____ / 11 critères conformes</div>
+  </div>
+</div>
+
+<div style="margin-top:10px;">
+  <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Mes 5 actions correctives prioritaires :</div>
+  <div class="ligne"></div><div class="ligne"></div><div class="ligne"></div><div class="ligne"></div><div class="ligne"></div>
+</div>
+
+
+<!-- ════════════════════════════════ -->
+<!-- FICHE DE VEILLE — SÉANCE 5 -->
+<!-- ════════════════════════════════ -->
+<div class="sep"></div>
+<div class="doc-label">Séance 5 — Fiche de veille</div>
+<h2 style="margin-top:8px;">Ma fiche de veille e-réputation</h2>
+<div class="sous-titre">À compléter lors de la séance 5, puis à conserver comme outil de référence.</div>
+<div class="eleve-row">
+  <div class="eleve-field"><label>Nom · Prénom</label></div>
+  <div class="eleve-field"><label>Classe · Date</label></div>
+</div>
+
+<div style="margin-bottom:14px;">
+  <div style="font-size:12px; font-weight:700; color:#0a66c2; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">🔍 Outils de surveillance de mon image en ligne</div>
+  <table class="veille-table">
+    <tr><th style="width:200px;">Nom de l'outil</th><th>Ce que ça permet de faire</th><th style="width:120px;">Comment l'utiliser</th></tr>
+    <tr><td style="font-weight:600;">Google Alerts</td><td></td><td></td></tr>
+    <tr><td style="font-weight:600;">Have I Been Pwned</td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+  </table>
+</div>
+
+<div style="margin-bottom:14px;">
+  <div style="font-size:12px; font-weight:700; color:#0a66c2; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">📡 Sources professionnelles CIEL à suivre</div>
+  <table class="veille-table">
+    <tr><th style="width:200px;">Source / Site</th><th>Thématique</th><th style="width:120px;">Fréquence de consultation</th></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+  </table>
+</div>
+
+<div>
+  <div style="font-size:12px; font-weight:700; color:#0a66c2; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">✅ Mon plan d'action veille (à mettre en place ce mois-ci)</div>
+  <div class="ligne"></div><div class="ligne"></div><div class="ligne"></div>
+</div>
+
+
+<!-- ════════════════════════════════ -->
+<!-- FICHE D'ÉVALUATION ÉLÈVE — SÉANCE 6 -->
+<!-- ════════════════════════════════ -->
+<div class="sep"></div>
+<div class="doc-label" style="background:#1e7e34;">Séance 6 — Bilan de séquence</div>
+<h2 style="margin-top:8px;">Fiche d'auto-évaluation — Bilan de séquence</h2>
+<div class="sous-titre">Évalue toi-même tes progrès sur chaque compétence travaillée pendant la séquence.</div>
+<div class="eleve-row">
+  <div class="eleve-field"><label>Nom · Prénom</label></div>
+  <div class="eleve-field"><label>Classe · Date</label></div>
+</div>
+
+<div class="eval-comp">
+  <div class="eval-comp-header"><span>Compétence 1 — Compréhension et analyse</span><span>/4</span></div>
+  <div class="eval-comp-body">
+    <div class="ae-chose">Coche le niveau qui correspond à ce que tu as réalisé :</div>
+    <div class="auto-eval">
+      <div class="ae-level l1"><span class="ae-icon">😕</span><span class="ae-label">Je n'ai pas réussi à identifier et classer les traces</span></div>
+      <div class="ae-level l2"><span class="ae-icon">🙂</span><span class="ae-label">J'ai classé quelques traces mais pas toutes</span></div>
+      <div class="ae-level l3"><span class="ae-icon">😊</span><span class="ae-label">J'ai bien classé les traces et fait le lien avec le métier CIEL</span></div>
+      <div class="ae-level l4"><span class="ae-icon">🌟</span><span class="ae-label">J'ai une analyse fine, avec nuances et exemples précis</span></div>
+    </div>
+    <div class="comment-zone"><label>Ce que j'ai appris / ce que je dois encore travailler :</label><div class="ligne"></div></div>
+  </div>
+</div>
+
+<div class="eval-comp">
+  <div class="eval-comp-header"><span>Compétence 2 — Expression écrite</span><span>/4</span></div>
+  <div class="eval-comp-body">
+    <div class="ae-chose">Coche le niveau qui correspond à ce que tu as réalisé :</div>
+    <div class="auto-eval">
+      <div class="ae-level l1"><span class="ae-icon">😕</span><span class="ae-label">Mon texte n'est pas structuré, pas d'argument clair</span></div>
+      <div class="ae-level l2"><span class="ae-icon">🙂</span><span class="ae-label">J'ai un argument mais le texte manque de structure</span></div>
+      <div class="ae-level l3"><span class="ae-icon">😊</span><span class="ae-label">Mon texte est bien structuré avec 2 arguments clairs</span></div>
+      <div class="ae-level l4"><span class="ae-icon">🌟</span><span class="ae-label">Structure maîtrisée, vocabulaire pro, 3 arguments nuancés</span></div>
+    </div>
+    <div class="comment-zone"><label>Ce que j'ai appris / ce que je dois encore travailler :</label><div class="ligne"></div></div>
+  </div>
+</div>
+
+<div class="eval-comp">
+  <div class="eval-comp-header"><span>Compétence 3 — Expression orale</span><span>/4</span></div>
+  <div class="eval-comp-body">
+    <div class="ae-chose">Coche le niveau qui correspond à ce que tu as réalisé :</div>
+    <div class="auto-eval">
+      <div class="ae-level l1"><span class="ae-icon">😕</span><span class="ae-label">Je n'ai pas pris la parole ou je n'ai pas argumenté</span></div>
+      <div class="ae-level l2"><span class="ae-icon">🙂</span><span class="ae-label">J'ai pris la parole quand on me l'a demandé</span></div>
+      <div class="ae-level l3"><span class="ae-icon">😊</span><span class="ae-label">J'ai pris la parole spontanément avec un argument</span></div>
+      <div class="ae-level l4"><span class="ae-icon">🌟</span><span class="ae-label">J'ai dialogué, rebondi sur les autres, bien argumenté</span></div>
+    </div>
+    <div class="comment-zone"><label>Ce que j'ai appris / ce que je dois encore travailler :</label><div class="ligne"></div></div>
+  </div>
+</div>
+
+<div class="eval-comp">
+  <div class="eval-comp-header"><span>Compétence 4 — Dimension professionnelle CIEL</span><span>/4</span></div>
+  <div class="eval-comp-body">
+    <div class="ae-chose">Coche le niveau qui correspond à ce que tu as réalisé :</div>
+    <div class="auto-eval">
+      <div class="ae-level l1"><span class="ae-icon">😕</span><span class="ae-label">Je n'ai pas fait le lien avec le métier CIEL</span></div>
+      <div class="ae-level l2"><span class="ae-icon">🙂</span><span class="ae-label">J'ai évoqué le métier mais sans développer</span></div>
+      <div class="ae-level l3"><span class="ae-icon">😊</span><span class="ae-label">Ma charte et mes conseils sont pertinents pour un technicien CIEL</span></div>
+      <div class="ae-level l4"><span class="ae-icon">🌟</span><span class="ae-label">Posture proactive, maîtrise de tous les enjeux pro</span></div>
+    </div>
+    <div class="comment-zone"><label>Ce que j'ai appris / ce que je dois encore travailler :</label><div class="ligne"></div></div>
+  </div>
+</div>
+
+<div style="background:#f8f9fa; border:1.5px solid #ddd; border-radius:6px; padding:12px 16px; margin-top:4px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div>
+      <div style="font-size:12px; font-weight:700; margin-bottom:6px;">La chose la plus utile que j'ai apprise :</div>
+      <div class="ligne"></div><div class="ligne"></div>
+    </div>
+    <div>
+      <div style="font-size:12px; font-weight:700; margin-bottom:6px;">Ce que je vais changer dans ma pratique numérique :</div>
+      <div class="ligne"></div><div class="ligne"></div>
+    </div>
+  </div>
+  <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #ddd; padding-top:10px;">
+    <div style="font-size:13px; font-weight:700;">Mon auto-évaluation totale :</div>
+    <div style="font-size:22px; font-weight:700; color:#0a66c2;">_____ / 16</div>
+    <div style="font-size:11px; color:#888;">Note enseignant : _____ / 16</div>
+  </div>
+</div>
+
+<div class="page-footer">Supports pédagogiques — Co-intervention Français / CIEL — Seconde MTNE — Lycée Louis Lumière · Séances 3, 4, 5 &amp; 6</div>
+</div>
+</body>
+</html>

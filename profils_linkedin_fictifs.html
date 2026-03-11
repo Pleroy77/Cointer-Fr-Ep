@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profils LinkedIn Fictifs — Co-intervention CIEL</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', -apple-system, sans-serif;
+    background: #f3f2ef;
+    color: #191919;
+    font-size: 14px;
+  }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    background: #0a66c2;
+    color: white;
+    text-align: center;
+    padding: 18px 24px;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  .page-header strong { font-size: 15px; display: block; margin-bottom: 4px; }
+  .page-header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 2px 12px;
+    font-size: 11px;
+    margin-top: 6px;
+  }
+
+  /* ─── NIVEAU BANNER ─── */
+  .niveau-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-left: 5px solid;
+    margin: 28px auto 0;
+    max-width: 700px;
+  }
+  .niveau-banner.bon    { background: #e6f4ea; border-color: #1e7e34; color: #1e7e34; }
+  .niveau-banner.moyen  { background: #fff8e1; border-color: #f9a825; color: #c17a00; }
+  .niveau-banner.faible { background: #fdecea; border-color: #c62828; color: #c62828; }
+  .niveau-banner .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  .niveau-banner .note {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 400;
+    font-style: italic;
+    text-transform: none;
+    opacity: 0.8;
+  }
+
+  /* ─── LINKEDIN CARD ─── */
+  .li-card {
+    max-width: 700px;
+    margin: 0 auto 40px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #dce6f0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* Cover */
+  .li-cover {
+    height: 96px;
+    position: relative;
+  }
+  .cover-bon    { background: linear-gradient(135deg, #0a66c2 0%, #0d8ecf 60%, #17a2d4 100%); }
+  .cover-moyen  { background: linear-gradient(135deg, #607d8b 0%, #78909c 100%); }
+  .cover-faible { background: linear-gradient(135deg, #bcaaa4 0%, #d7ccc8 100%); }
+
+  /* Avatar */
+  .li-avatar-wrap {
+    position: absolute;
+    bottom: -32px;
+    left: 20px;
+  }
+  .li-avatar {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    border: 3px solid white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -1px;
+  }
+  .avatar-bon    { background: #0a66c2; }
+  .avatar-moyen  { background: #607d8b; }
+  .avatar-faible { background: #bcaaa4; }
+
+  /* Header info */
+  .li-header {
+    padding: 44px 20px 14px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .li-name { font-size: 20px; font-weight: 700; color: #191919; line-height: 1.2; }
+  .li-title { font-size: 14px; color: #333; margin-top: 3px; line-height: 1.4; }
+  .li-location {
+    font-size: 12px; color: #666;
+    margin-top: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .li-location svg { opacity: 0.5; }
+  .connect-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 5px 14px;
+    border: 1.5px solid #0a66c2;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0a66c2;
+    cursor: default;
+  }
+
+  /* About */
+  .li-section { padding: 14px 20px; border-bottom: 1px solid #e8e8e8; }
+  .li-section:last-child { border-bottom: none; }
+  .section-title {
+    font-size: 16px; font-weight: 700;
+    color: #191919; margin-bottom: 10px;
+  }
+  .li-about { font-size: 13.5px; color: #333; line-height: 1.6; }
+  .li-about.empty { color: #999; font-style: italic; }
+
+  /* Experience */
+  .exp-item { display: flex; gap: 12px; margin-bottom: 14px; }
+  .exp-item:last-child { margin-bottom: 0; }
+  .exp-logo {
+    width: 40px; height: 40px; border-radius: 4px;
+    background: #e8f0fe; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0;
+    border: 1px solid #dce6f0;
+  }
+  .exp-content {}
+  .exp-role { font-size: 14px; font-weight: 600; color: #191919; }
+  .exp-company { font-size: 13px; color: #444; }
+  .exp-dates { font-size: 12px; color: #777; margin-top: 1px; }
+  .exp-desc { font-size: 13px; color: #444; margin-top: 4px; line-height: 1.5; }
+
+  /* Skills */
+  .skills-list { display: flex; flex-wrap: wrap; gap: 7px; }
+  .skill-tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid;
+  }
+  .skill-tag.tech { background: #e8f0fe; color: #0a66c2; border-color: #c5d8f5; }
+  .skill-tag.soft { background: #e6f4ea; color: #1e7e34; border-color: #b8dfbe; }
+  .skill-tag.bad  { background: #f5f5f5; color: #888; border-color: #ddd; }
+
+  /* Certifications */
+  .cert-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+  .cert-item:last-child { margin-bottom: 0; }
+  .cert-icon {
+    width: 36px; height: 36px; border-radius: 4px;
+    background: #fff8e1; border: 1px solid #ffe082;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .cert-name { font-size: 13.5px; font-weight: 600; color: #191919; }
+  .cert-org { font-size: 12px; color: #777; }
+
+  /* Problème tag */
+  .problem-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #fdecea; color: #c62828;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px; padding: 3px 8px;
+    font-size: 11px; font-weight: 600;
+    margin-top: 6px;
+  }
+  .problem-tag::before { content: "⚠"; font-size: 12px; }
+
+  .good-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #e6f4ea; color: #1e7e34;
+    border: 1px solid #b8dfbe;
+    border-radius: 4px; padding: 3px 8px;
+    font-size: 11px; font-weight: 600;
+    margin-top: 6px;
+  }
+  .good-tag::before { content: "✓"; font-size: 12px; }
+
+  /* Photo placeholder */
+  .photo-missing {
+    background: #f5f5f5;
+    border: 2px dashed #ccc;
+    color: #aaa;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 4px;
+  }
+
+  /* Annotation teacher zone */
+  .teacher-note {
+    max-width: 700px;
+    margin: 0 auto 8px;
+    background: #fffde7;
+    border: 1px dashed #f9a825;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #555;
+  }
+  .teacher-note strong { color: #c17a00; }
+
+  /* Print */
+  @media print {
+    .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .li-cover, .li-avatar, .skill-tag, .niveau-banner, .teacher-note, .problem-tag, .good-tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .li-card { break-inside: avoid; page-break-inside: avoid; }
+    body { background: white; }
+  }
+
+  .divider { max-width: 700px; margin: 0 auto; border: none; border-top: 2px dashed #d0d0d0; margin-top: 8px; }
+
+  .page-footer {
+    max-width: 700px; margin: 30px auto 40px;
+    text-align: center; font-size: 11px; color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <strong>Supports pédagogiques — Co-intervention Français / CIEL — Seconde MTNE</strong>
+  Profils LinkedIn fictifs à des fins exclusivement pédagogiques · Lycée Louis Lumière
+  <div class="badge">🔒 Document enseignant — Ne pas diffuser en dehors de la classe</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PROFIL 1 — BON (Technicien Réseaux) -->
+<!-- ══════════════════════════════════════════ -->
+
+<div class="niveau-banner bon">
+  <div class="dot"></div>
+  Profil n°1 — Niveau : BON · Technicien Réseaux
+  <span class="note">À utiliser comme modèle de référence</span>
+</div>
+
+<div class="teacher-note">
+  <strong>Note enseignant ·</strong> Ce profil illustre les bonnes pratiques : titre précis avec mots-clés, résumé professionnel complet, expériences détaillées, compétences techniques spécifiques, certifications. À montrer en séance 5 comme exemple à atteindre.
+</div>
+
+<div class="li-card">
+  <div class="li-cover cover-bon">
+    <div class="li-avatar-wrap">
+      <div class="li-avatar avatar-bon">LM</div>
+    </div>
+  </div>
+  <div class="li-header">
+    <div class="li-name">Lucas Martin</div>
+    <div class="li-title">Étudiant Bac Pro CIEL — Réseaux &amp; Systèmes numériques | Passionné par la cybersécurité et les infrastructures réseau</div>
+    <div class="li-location">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="#666"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      Lyon, Auvergne-Rhône-Alpes · <span style="color:#0a66c2; cursor:default;">500+ relations</span>
+    </div>
+    <div class="connect-btn">+ Se connecter</div>
+    <div><span class="good-tag">Photo professionnelle</span> <span class="good-tag">Titre optimisé</span> <span class="good-tag">Disponibilité stage indiquée</span></div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">À propos</div>
+    <div class="li-about">
+      En formation Bac Pro CIEL (Cybersécurité, Informatique et réseaux, ÉLectronique) au Lycée Louis Lumière de Lyon, je me spécialise dans l'administration des réseaux informatiques et la sécurité des systèmes d'information.<br><br>
+      Curieux et rigoureux, j'ai réalisé deux périodes de formation en entreprise qui m'ont permis de mettre en pratique la configuration de routeurs Cisco, la mise en place de VLANs et la maintenance de postes clients sous Windows Server 2019.<br><br>
+      <strong>Disponible pour un stage de 6 semaines à partir de janvier 2025.</strong> Ouvert aux offres dans les secteurs des réseaux, de l'infogérance ou de la cybersécurité.
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Expériences</div>
+    <div class="exp-item">
+      <div class="exp-logo">🏢</div>
+      <div class="exp-content">
+        <div class="exp-role">Technicien réseau stagiaire</div>
+        <div class="exp-company">NetServices Lyon — PME spécialisée infogérance</div>
+        <div class="exp-dates">Juin 2024 · 6 semaines</div>
+        <div class="exp-desc">Configuration de switches Cisco Catalyst, déploiement de VLANs, maintenance préventive parc informatique (30 postes). Participation au remplacement d'un routeur en production.</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-logo">🏫</div>
+      <div class="exp-content">
+        <div class="exp-role">Projet scolaire — Maquette réseau d'entreprise</div>
+        <div class="exp-company">Lycée Louis Lumière</div>
+        <div class="exp-dates">2023 – 2024</div>
+        <div class="exp-desc">Conception et déploiement d'une maquette réseau sous Cisco Packet Tracer simulant une architecture multi-sites avec DMZ, pare-feu et annuaire Active Directory.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Compétences</div>
+    <div class="skills-list">
+      <span class="skill-tag tech">Cisco IOS</span>
+      <span class="skill-tag tech">VLANs / Routage</span>
+      <span class="skill-tag tech">Windows Server 2019</span>
+      <span class="skill-tag tech">Active Directory</span>
+      <span class="skill-tag tech">Wireshark</span>
+      <span class="skill-tag tech">Linux (Debian)</span>
+      <span class="skill-tag tech">Packet Tracer</span>
+      <span class="skill-tag soft">Rigueur</span>
+      <span class="skill-tag soft">Travail en équipe</span>
+      <span class="skill-tag soft">Veille technologique</span>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Certifications</div>
+    <div class="cert-item">
+      <div class="cert-icon">🎓</div>
+      <div>
+        <div class="cert-name">Cisco CCNA Introduction to Networks (ITN)</div>
+        <div class="cert-org">Cisco Networking Academy · 2024</div>
+      </div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon">🔐</div>
+      <div>
+        <div class="cert-name">PIX — Passeport Internet et Cybersécurité</div>
+        <div class="cert-org">Éduscol · 2023</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PROFIL 2 — MOYEN (Technicien Cybersécurité) -->
+<!-- ══════════════════════════════════════════ -->
+
+<hr class="divider">
+
+<div class="niveau-banner moyen">
+  <div class="dot"></div>
+  Profil n°2 — Niveau : MOYEN · Technicien Cybersécurité
+  <span class="note">Points à améliorer repérables — à analyser en classe</span>
+</div>
+
+<div class="teacher-note">
+  <strong>Note enseignant ·</strong> Ce profil est fonctionnel mais manque de précision : résumé trop court et générique, compétences vagues, aucune certification, expériences non détaillées. Bon support pour le débat « qu'est-ce qui manque ? ». Les balises ⚠ signalent les points faibles à faire identifier par les élèves.
+</div>
+
+<div class="li-card">
+  <div class="li-cover cover-moyen">
+    <div class="li-avatar-wrap">
+      <div class="li-avatar avatar-moyen">SC</div>
+    </div>
+  </div>
+  <div class="li-header">
+    <div class="li-name">Sara Chabert</div>
+    <div class="li-title">Étudiante en informatique · Bac Pro CIEL</div>
+    <div class="li-location">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="#666"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      Lyon
+    </div>
+    <div class="connect-btn">+ Se connecter</div>
+    <div>
+      <span class="problem-tag">Titre trop vague — pas de spécialité indiquée</span>
+      <span class="problem-tag">Disponibilité stage non précisée</span>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">À propos</div>
+    <div class="li-about">
+      Je suis étudiante en Bac Pro CIEL. J'aime l'informatique et la cybersécurité. Je cherche un stage.
+      <div><span class="problem-tag">Résumé trop court et non professionnel — aucune compétence mise en avant</span></div>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Expériences</div>
+    <div class="exp-item">
+      <div class="exp-logo">🏢</div>
+      <div class="exp-content">
+        <div class="exp-role">Stage en entreprise</div>
+        <div class="exp-company">Entreprise informatique (Lyon)</div>
+        <div class="exp-dates">2024</div>
+        <div class="exp-desc">Stage de 6 semaines.</div>
+        <div><span class="problem-tag">Nom de l'entreprise absent · Aucune description des missions réalisées</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Compétences</div>
+    <div class="skills-list">
+      <span class="skill-tag bad">Informatique</span>
+      <span class="skill-tag bad">Réseaux</span>
+      <span class="skill-tag bad">Sécurité</span>
+      <span class="skill-tag bad">Bureautique</span>
+    </div>
+    <div><span class="problem-tag">Compétences trop génériques — aucun outil ou technologie spécifique cité</span></div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Certifications</div>
+    <div class="li-about empty">Aucune certification renseignée.</div>
+    <div><span class="problem-tag">Absence de certifications — même le PIX ou CCNA ITN valoriseraient le profil</span></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PROFIL 3 — INSUFFISANT (Maintenance info) -->
+<!-- ══════════════════════════════════════════ -->
+
+<hr class="divider">
+
+<div class="niveau-banner faible">
+  <div class="dot"></div>
+  Profil n°3 — Niveau : INSUFFISANT · Technicien Maintenance informatique
+  <span class="note">Profil contre-exemple — à analyser collectivement</span>
+</div>
+
+<div class="teacher-note">
+  <strong>Note enseignant ·</strong> Ce profil illustre les erreurs à ne pas commettre : pseudo non professionnel, photo de profil inadaptée, contenu personnel visible, aucune compétence technique, commentaire public problématique. Idéal pour la séance 1 (classement des traces) et la séance 2 (débat).
+</div>
+
+<div class="li-card">
+  <div class="li-cover cover-faible">
+    <div class="li-avatar-wrap">
+      <div class="li-avatar avatar-faible photo-missing" style="width:76px;height:76px;border-radius:50%;font-size:9px;">
+        Photo de soirée
+      </div>
+    </div>
+  </div>
+  <div class="li-header">
+    <div class="li-name">kev_info69 <span style="font-size:12px; font-weight:400; color:#999;">(Kevin B.)</span></div>
+    <div class="li-title">chui en bac pro info jsuis dans la tech 🎮💻</div>
+    <div class="li-location">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="#666"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      quelque part en france lol
+    </div>
+    <div class="connect-btn">+ Se connecter</div>
+    <div>
+      <span class="problem-tag">Pseudo non professionnel</span>
+      <span class="problem-tag">Photo de soirée inadaptée</span>
+      <span class="problem-tag">Titre familier, emojis, aucune info pro</span>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">À propos</div>
+    <div class="li-about">
+      jsp trop quoi mettre ici, je cherche un stage pour mon bac. jai fait des trucs en info. si vous avez un stage dites moi 🙏
+      <div><span class="problem-tag">Registre familier · Fautes d'orthographe · Aucune compétence ni objectif pro</span></div>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Activité récente</div>
+    <div class="exp-item">
+      <div class="exp-logo" style="background:#fff3e0; border-color:#ffe0b2; font-size:14px;">💬</div>
+      <div class="exp-content">
+        <div class="exp-role" style="font-weight:400; font-size:13px; color:#444;">Kevin B. a commenté :</div>
+        <div class="exp-desc" style="background:#f9f9f9; border-left:3px solid #ddd; padding:6px 10px; margin-top:4px; border-radius:0 4px 4px 0;">
+          « franchement les profs de cette école savent rien, perdez pas votre temps à postuler là »
+        </div>
+        <div><span class="problem-tag">Commentaire public négatif sur un employeur / établissement — visible par tout recruteur</span></div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-logo" style="background:#fce4ec; border-color:#f8bbd0; font-size:14px;">📸</div>
+      <div class="exp-content">
+        <div class="exp-role" style="font-weight:400; font-size:13px; color:#444;">Kevin B. a partagé une photo :</div>
+        <div class="exp-desc">Photo de soirée avec légende « weekend 🔥🔥 on lâche rien »</div>
+        <div><span class="problem-tag">Contenu personnel partagé publiquement — inadapté à un profil professionnel</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Compétences</div>
+    <div class="li-about empty">Aucune compétence renseignée.</div>
+    <div><span class="problem-tag">Section vide — un recruteur ne peut pas évaluer le profil</span></div>
+  </div>
+
+  <div class="li-section">
+    <div class="section-title">Expériences</div>
+    <div class="li-about empty">Aucune expérience renseignée.</div>
+    <div><span class="problem-tag">Même les projets scolaires pourraient figurer ici</span></div>
+  </div>
+</div>
+
+<!-- RÉCAPITULATIF -->
+<div class="teacher-note" style="margin-top:20px;">
+  <strong>Récapitulatif pédagogique ·</strong>
+  Profil 1 (Lucas Martin) = référence · 
+  Profil 2 (Sara Chabert) = à améliorer · 
+  Profil 3 (Kevin B.) = contre-exemple.
+  Ces trois profils peuvent être projetés, imprimés ou distribués en binômes pour l'activité d'analyse comparative (Séance 5).
+</div>
+
+<div class="page-footer">
+  Profils entièrement fictifs — créés à des fins pédagogiques exclusivement · Lycée Louis Lumière · Co-intervention Français / CIEL · Seconde MTNE
+</div>
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Faux e-mails — Activité phishing — Séance 4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', Arial, sans-serif; background: #f0f2f5; color: #1a1a1a; font-size: 13px; }
+
+  /* ── COVER ── */
+  .page-cover {
+    background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 60px 40px;
+    page-break-after: always;
+  }
+  .cover-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 6px 18px;
+    border-radius: 20px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+  .cover-title { color: #fff; font-size: 36px; font-weight: 700; text-align: center; margin-bottom: 12px; }
+  .cover-sub { color: rgba(255,255,255,0.8); font-size: 16px; text-align: center; margin-bottom: 40px; }
+  .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; width: 100%; }
+  .cover-card { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px; padding: 20px 24px; color: #fff; }
+  .cover-card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #fca5a5; }
+  .cover-card-desc { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+
+  /* ── EMAIL PAGE ── */
+  .email-page { background: #f0f2f5; padding: 30px 40px 40px; min-height: 100vh; page-break-after: always; }
+  .email-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .email-num { background: #b91c1c; color: #fff; font-weight: 700; font-size: 13px;
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .email-label-title { font-size: 15px; font-weight: 600; color: #333; }
+  .email-label-diff { font-size: 11px; color: #888; margin-left: auto; padding: 3px 10px; border-radius: 10px; }
+  .diff-easy { background: #fef3c7; color: #92400e; }
+  .diff-hard { background: #fee2e2; color: #991b1b; }
+
+  /* ── CLIENT MAIL ── */
+  .mail-client { background: #fff; border-radius: 10px; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 2px 12px rgba(0,0,0,.08); overflow: hidden; }
+  .mail-topbar { background: #f3f4f6; padding: 10px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e5e7eb; }
+  .mail-topbar-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .mail-topbar-title { font-size: 13px; color: #6b7280; margin-left: 8px; }
+  .mail-sidebar { background: #1f2937; width: 200px; flex-shrink: 0; }
+  .mail-layout { display: flex; min-height: 520px; }
+  .mail-sidebar { background: #1f2937; padding: 16px 0; flex-shrink: 0; }
+  .mail-sidebar-item { padding: 8px 16px; font-size: 12px; color: #9ca3af; cursor: pointer; }
+  .mail-sidebar-item.active { background: #374151; color: #fff; font-weight: 600; }
+  .mail-sidebar-item.bold { font-weight: 700; color: #fff; }
+  .mail-content { flex: 1; padding: 24px 28px; }
+  .mail-subject-line { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+  .mail-meta { display: grid; grid-template-columns: 80px 1fr; gap: 4px 8px; margin-bottom: 20px; font-size: 13px; }
+  .mail-meta-label { color: #6b7280; font-weight: 500; }
+  .mail-meta-value { color: #111; }
+  .mail-meta-value.suspect { color: #b91c1c; font-weight: 600; background: #fee2e2; padding: 1px 6px; border-radius: 3px; }
+  .mail-body { font-size: 14px; color: #374151; line-height: 1.7; }
+  .mail-body p { margin-bottom: 12px; }
+  .mail-body .logo-fake { display: inline-block; background: #0078d4; color: #fff; font-size: 16px; font-weight: 700; padding: 4px 12px; border-radius: 4px; margin-bottom: 16px; letter-spacing: 1px; }
+  .mail-body .alert-box { background: #fff3cd; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 12px 0; font-size: 13px; }
+  .mail-body .cta-btn { display: inline-block; background: #0078d4; color: #fff; padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: 600; margin: 8px 0; text-decoration: none; }
+  .mail-body .url-display { font-family: monospace; font-size: 12px; color: #6b7280; word-break: break-all; }
+  .mail-body .url-display.suspect { color: #b91c1c; background: #fee2e2; padding: 4px 8px; border-radius: 4px; display: block; margin-top: 4px; }
+  .mail-body .signature { margin-top: 20px; padding-top: 14px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #6b7280; }
+  .mail-body .signature strong { color: #374151; display: block; }
+
+  /* Email B — style RH entreprise */
+  .mail-body .logo-rh { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .mail-body .logo-rh-icon { width: 36px; height: 36px; background: #1e40af; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; }
+  .mail-body .logo-rh-name { font-size: 15px; font-weight: 700; color: #1e40af; }
+  .mail-body .logo-rh-sub { font-size: 11px; color: #6b7280; }
+
+  /* ── INDICES ── */
+  .indices-section { margin-top: 20px; background: #fff; border-radius: 10px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.06); overflow: hidden; }
+  .indices-header { background: #b91c1c; color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 600; }
+  .indices-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .indice { padding: 12px 14px; border-right: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
+  .indice:nth-child(3n) { border-right: none; }
+  .indice-num { font-size: 10px; font-weight: 700; color: #b91c1c; text-transform: uppercase; margin-bottom: 3px; }
+  .indice-text { font-size: 12px; color: #374151; line-height: 1.4; }
+  .indice-where { font-size: 10px; color: #9ca3af; margin-top: 3px; font-style: italic; }
+
+  /* ── ANALYSE BOX ── */
+  .analyse-box { margin-top: 16px; background: #fff3cd; border-left: 4px solid #f59e0b;
+    border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 12px; color: #92400e; }
+  .analyse-box strong { color: #b45309; }
+
+  /* ── CORRIGÉ PAGE ── */
+  .corrige-page { background: #f0f2f5; padding: 30px 40px 40px; min-height: 100vh; }
+  .corrige-title { font-size: 20px; font-weight: 700; color: #1f2937; margin-bottom: 6px; }
+  .corrige-sub { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+  .corrige-section { margin-bottom: 28px; }
+  .corrige-section-title { font-size: 15px; font-weight: 700; color: #b91c1c; margin-bottom: 12px;
+    padding-bottom: 6px; border-bottom: 2px solid #fca5a5; }
+  .corrige-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .corrige-table th { background: #1f2937; color: #fff; padding: 8px 10px; text-align: left; }
+  .corrige-table td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; line-height: 1.5; }
+  .corrige-table tr:nth-child(even) td { background: #f9fafb; }
+  .tag { display: inline-block; border-radius: 10px; padding: 2px 8px; font-size: 10px; font-weight: 600; }
+  .tag-grave { background: #fee2e2; color: #991b1b; }
+  .tag-moyen { background: #fef3c7; color: #92400e; }
+  .tag-subtil { background: #dbeafe; color: #1e40af; }
+
+  @media print {
+    body { background: #fff; }
+    .email-page, .corrige-page { background: #fff; padding: 20px; }
+    .page-cover { background: #b91c1c !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ COUVERTURE ══════════ -->
+<div class="page-cover">
+  <div class="cover-badge">⚠️ Documents fictifs — Usage pédagogique uniquement</div>
+  <div class="cover-title">Détecte le phishing !</div>
+  <div class="cover-sub">Séance 4 — Cybersécurité · Co-intervention Français / CIEL · Seconde MTNE</div>
+  <div class="cover-grid">
+    <div class="cover-card">
+      <div class="cover-card-title">📧 Email A — Niveau accessible</div>
+      <div class="cover-card-desc">Faux support Microsoft. Les indices sont présents mais demandent de l'attention. Pour entrer dans l'activité.</div>
+    </div>
+    <div class="cover-card">
+      <div class="cover-card-title">📧 Email B — Niveau avancé</div>
+      <div class="cover-card-desc">Faux email RH ciblé. Mise en scène plus soignée, indices plus subtils. Plus proche des vraies attaques.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EMAIL A ══════════ -->
+<div class="email-page">
+  <div class="email-label">
+    <div class="email-num">A</div>
+    <div class="email-label-title">Email A — Faux support Microsoft</div>
+    <div class="email-label-diff diff-easy">🟡 Niveau accessible</div>
+  </div>
+
+  <div class="mail-client">
+    <div class="mail-topbar">
+      <div class="mail-topbar-dot" style="background:#ef4444;"></div>
+      <div class="mail-topbar-dot" style="background:#f59e0b;"></div>
+      <div class="mail-topbar-dot" style="background:#22c55e;"></div>
+      <div class="mail-topbar-title">Messagerie — thomas.renard@lycee-louislumiereX.fr</div>
+    </div>
+    <div class="mail-layout">
+      <div class="mail-sidebar">
+        <div class="mail-sidebar-item active bold">📥 Boîte de réception (3)</div>
+        <div class="mail-sidebar-item">📤 Envoyés</div>
+        <div class="mail-sidebar-item">📁 Brouillons</div>
+        <div class="mail-sidebar-item">🗑️ Corbeille</div>
+      </div>
+      <div class="mail-content">
+        <div class="mail-subject-line">⚠️ Action requise : Votre compte Microsoft va être suspendu</div>
+        <div class="mail-meta">
+          <span class="mail-meta-label">De :</span>
+          <span class="mail-meta-value suspect">support-securite@microsoft-helpdesk-fr.net</span>
+          <span class="mail-meta-label">À :</span>
+          <span class="mail-meta-value">thomas.renard@lycee-louislumiereX.fr</span>
+          <span class="mail-meta-label">Répondre à :</span>
+          <span class="mail-meta-value suspect">collect-data@free-form.ru</span>
+          <span class="mail-meta-label">Date :</span>
+          <span class="mail-meta-value">Lundi 10 mars 2025 · <strong style="color:#b91c1c;">02:47</strong></span>
+          <span class="mail-meta-label">Objet :</span>
+          <span class="mail-meta-value">⚠️ Action requise : Votre compte Microsoft va être suspendu</span>
+        </div>
+        <div class="mail-body">
+          <div class="logo-fake">Micr0soft</div>
+          <p>Cher(e) utilisateur(trice),</p>
+          <div class="alert-box">
+            🔴 <strong>Votre compte Microsoft sera définitivement suspendu dans 24 heures</strong> si vous ne vérifiez pas immédiatement vos informations de connexion.
+          </div>
+          <p>Notre système a détecté une <strong>activité suspecte</strong> sur votre compte. Pour protéger vos données et éviter la suspension, vous devez confirmer votre identité en cliquant sur le bouton ci-dessous et en saisissant votre <strong>mot de passe actuel</strong>.</p>
+          <p>
+            <a class="cta-btn" href="#">✅ Vérifier mon compte maintenant</a>
+          </p>
+          <p class="url-display">Lien réel : <span class="suspect">http://microsoft-verification-compte-fr.xyz/login?token=AB7392XK</span></p>
+          <p>Si vous ne vous connectez pas dans les <strong>24 heures</strong>, votre compte et toutes vos données seront <strong>définitivement supprimés</strong>.</p>
+          <div class="signature">
+            <strong>L'équipe Sécurité Micosoft</strong>
+            Centre de sécurité Microsoft · 1 Microsoft Way · Redmond, WA 98052
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyse-box">
+    <strong>💡 Consigne :</strong> Relève tous les indices qui te permettent d'identifier cet email comme une tentative de phishing. Note-les dans le tableau de ta fiche élève. Objectif : en trouver au moins 5.
+  </div>
+</div>
+
+<!-- ══════════ EMAIL B ══════════ -->
+<div class="email-page">
+  <div class="email-label">
+    <div class="email-num">B</div>
+    <div class="email-label-title">Email B — Faux email RH ciblé</div>
+    <div class="email-label-diff diff-hard">🔴 Niveau avancé</div>
+  </div>
+
+  <div class="mail-client">
+    <div class="mail-topbar">
+      <div class="mail-topbar-dot" style="background:#ef4444;"></div>
+      <div class="mail-topbar-dot" style="background:#f59e0b;"></div>
+      <div class="mail-topbar-dot" style="background:#22c55e;"></div>
+      <div class="mail-topbar-title">Messagerie — thomas.renard@lycee-louislumiereX.fr</div>
+    </div>
+    <div class="mail-layout">
+      <div class="mail-sidebar">
+        <div class="mail-sidebar-item active bold">📥 Boîte de réception (3)</div>
+        <div class="mail-sidebar-item">📤 Envoyés</div>
+        <div class="mail-sidebar-item">📁 Brouillons</div>
+        <div class="mail-sidebar-item">🗑️ Corbeille</div>
+      </div>
+      <div class="mail-content">
+        <div class="mail-subject-line">Votre candidature au stage — Compléter votre dossier avant le 14/03</div>
+        <div class="mail-meta">
+          <span class="mail-meta-label">De :</span>
+          <span class="mail-meta-value suspect">recrutement@infra-solutions-rh.com</span>
+          <span class="mail-meta-label">À :</span>
+          <span class="mail-meta-value">thomas.renard@lycee-louislumiereX.fr</span>
+          <span class="mail-meta-label">Répondre à :</span>
+          <span class="mail-meta-value">recrutement@infra-solutions-rh.com</span>
+          <span class="mail-meta-label">Date :</span>
+          <span class="mail-meta-value">Mercredi 12 mars 2025 · 09:14</span>
+          <span class="mail-meta-label">Objet :</span>
+          <span class="mail-meta-value">Votre candidature au stage — Compléter votre dossier avant le 14/03</span>
+        </div>
+        <div class="mail-body">
+          <div class="logo-rh">
+            <div class="logo-rh-icon">IS</div>
+            <div>
+              <div class="logo-rh-name">InfraSolutions</div>
+              <div class="logo-rh-sub">Votre partenaire en infrastructure numérique</div>
+            </div>
+          </div>
+
+          <p>Bonjour Thomas,</p>
+          <p>Suite à votre candidature pour un <strong>stage technicien réseaux</strong> déposée sur notre portail, nous avons bien reçu votre CV et votre lettre de motivation.</p>
+          <p>Afin de finaliser votre dossier avant l'entretien prévu la semaine prochaine, nous vous demandons de <strong>compléter le formulaire de mise à jour de vos informations personnelles</strong> (coordonnées, numéro de sécurité sociale, RIB pour la convention de stage) avant le <strong>vendredi 14 mars à 17h00</strong>.</p>
+          <p>
+            <a class="cta-btn" style="background:#1e40af;" href="#">📋 Accéder à mon espace candidat</a>
+          </p>
+          <p class="url-display">Lien : <span class="suspect">http://infrasolutions-candidats.recrutement-form.net/dossier?id=TR2025031</span></p>
+          <p style="font-size:12px;color:#6b7280;">Sans retour de votre part avant la date limite, votre candidature ne pourra malheureusement pas être retenue pour l'entretien.</p>
+          <div class="signature">
+            <strong>Amandine Perret — Chargée de recrutement</strong>
+            InfraSolutions · 14 rue de la Paix · 69002 Lyon<br>
+            Tél : 04 72 XX XX XX · recrutement@infra-solutions-rh.com
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyse-box">
+    <strong>💡 Consigne :</strong> Cet email est plus difficile à détecter. Cherche les indices avec attention. Compare avec l'email A : quelles techniques de manipulation sont différentes ? Lesquelles sont communes ?
+  </div>
+</div>
+
+<!-- ══════════ PAGE CORRIGÉ ENSEIGNANT ══════════ -->
+<div class="corrige-page">
+  <div style="background:#1f2937;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
+    <span style="font-size:18px;">🔒</span>
+    <div>
+      <div style="font-weight:700;font-size:15px;">Corrigé enseignant — Ne pas distribuer aux élèves</div>
+      <div style="font-size:12px;color:#9ca3af;">Indices détaillés + éléments de discussion pour la mise en commun</div>
+    </div>
+  </div>
+
+  <div class="corrige-section">
+    <div class="corrige-section-title">Email A — Indices (7 au total)</div>
+    <table class="corrige-table">
+      <tr><th>Indice</th><th>Localisation dans l'email</th><th>Niveau</th><th>Explication à donner aux élèves</th></tr>
+      <tr>
+        <td>Nom de domaine de l'expéditeur</td>
+        <td>Champ « De »</td>
+        <td><span class="tag tag-grave">Grave</span></td>
+        <td>microsoft-helpdesk-fr.net ≠ microsoft.com. Microsoft n'utilise jamais un domaine .net tiers.</td>
+      </tr>
+      <tr>
+        <td>Adresse « Répondre à »</td>
+        <td>Champ « Répondre à »</td>
+        <td><span class="tag tag-grave">Grave</span></td>
+        <td>collect-data@free-form.ru : domaine russe (.ru), nom explicite « collect-data ». Les réponses iraient vers un serveur inconnu.</td>
+      </tr>
+      <tr>
+        <td>Heure d'envoi</td>
+        <td>Champ « Date »</td>
+        <td><span class="tag tag-moyen">Moyen</span></td>
+        <td>02h47 du matin : aucune entreprise sérieuse n'envoie des alertes de sécurité en pleine nuit. Souvent signe d'envoi automatisé depuis un autre fuseau horaire.</td>
+      </tr>
+      <tr>
+        <td>Faute dans le logo</td>
+        <td>Corps — logo</td>
+        <td><span class="tag tag-moyen">Moyen</span></td>
+        <td>« Micr0soft » avec un zéro à la place du o. Technique classique pour contourner les filtres anti-spam.</td>
+      </tr>
+      <tr>
+        <td>Urgence artificielle</td>
+        <td>Corps — texte et objet</td>
+        <td><span class="tag tag-moyen">Moyen</span></td>
+        <td>« 24 heures », « définitivement supprimés » : mise sous pression pour empêcher la réflexion. Microsoft ne supprime pas un compte sans plusieurs avertissements.</td>
+      </tr>
+      <tr>
+        <td>Demande du mot de passe</td>
+        <td>Corps — paragraphe 2</td>
+        <td><span class="tag tag-grave">Grave</span></td>
+        <td>Aucun service légitime ne demande jamais votre mot de passe par email. C'est une règle absolue en cybersécurité.</td>
+      </tr>
+      <tr>
+        <td>URL du lien</td>
+        <td>Corps — lien visible</td>
+        <td><span class="tag tag-grave">Grave</span></td>
+        <td>microsoft-verification-compte-fr.xyz : domaine .xyz non officiel, sous-domaine « microsoft » ajouté pour tromper. Le vrai domaine est toujours microsoft.com.</td>
+      </tr>
+      <tr>
+        <td>Faute dans la signature</td>
+        <td>Signature</td>
+        <td><span class="tag tag-subtil">Subtil</span></td>
+        <td>« Micosoft » sans le r dans la signature. Erreur de copier-coller révélatrice.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="corrige-section">
+    <div class="corrige-section-title">Email B — Indices (6 au total, plus subtils)</div>
+    <table class="corrige-table">
+      <tr><th>Indice</th><th>Localisation</th><th>Niveau</th><th>Explication à donner aux élèves</th></tr>
+      <tr>
+        <td>Domaine expéditeur suspect</td>
+        <td>Champ « De »</td>
+        <td><span class="tag tag-moyen">Moyen</span></td>
+        <td>infra-solutions-rh.com : domaine générique créé pour paraître légitime. À vérifier : ce domaine existe-t-il vraiment ? La vraie entreprise a-t-elle ce nom exact ?</td>
+      </tr>
+      <tr>
+        <td>URL du formulaire</td>
+        <td>Corps — lien</td>
+        <td><span class="tag tag-grave">Grave</span></td>
+        <td>infrasolutions-candidats.recrutement-form.net : le vrai domaine est recrutement-form.net, pas infrasolutions. Technique du sous-domaine trompeur.</td>
+      </tr>
+      <tr>
+        <td>Demande de numéro de sécurité sociale et RIB</td>
+        <td>Corps — paragraphe 3</td>
+        <td><span class="tag tag-grave">Grave</span></td>
+        <td>Ces informations ne sont JAMAIS demandées avant un entretien, et jamais via un formulaire en ligne non sécurisé. C'est suffisant pour identifier une fraude.</td>
+      </tr>
+      <tr>
+        <td>Aucune trace de candidature préalable</td>
+        <td>Contexte général</td>
+        <td><span class="tag tag-subtil">Subtil</span></td>
+        <td>A-t-on vraiment postulé chez InfraSolutions ? Les phishing ciblés (spear phishing) misent sur le fait que la victime a peut-être postulé quelque part et ne s'en souvient plus.</td>
+      </tr>
+      <tr>
+        <td>Pression temporelle</td>
+        <td>Corps + objet</td>
+        <td><span class="tag tag-moyen">Moyen</span></td>
+        <td>Date limite sous 48h, menace de ne pas être retenu : même technique de pression que l'email A, mais formulée de façon plus professionnelle.</td>
+      </tr>
+      <tr>
+        <td>Numéro de téléphone incomplet</td>
+        <td>Signature</td>
+        <td><span class="tag tag-subtil">Subtil</span></td>
+        <td>« 04 72 XX XX XX » : un vrai service RH afficherait son numéro complet. Les XX sont souvent un signe que le phishing a été généré automatiquement.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background:#dbeafe;border-left:4px solid #1e40af;border-radius:0 8px 8px 0;padding:14px 18px;font-size:13px;color:#1e3a8a;margin-top:8px;">
+    <strong>💬 Questions de mise en commun (oral) :</strong><br><br>
+    • Lequel des deux emails vous a semblé le plus dangereux ? Pourquoi ?<br>
+    • Quelles techniques de manipulation sont communes aux deux emails ?<br>
+    • En tant que technicien CIEL en stage, que faites-vous si vous recevez l'email B sur votre messagerie professionnelle ?<br>
+    • Qui contacter en premier ? (Réponse attendue : le responsable informatique / le RSSI — pas cliquer, pas répondre, ne pas supprimer)
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Grille d'audit — Thomas Renard — Séance 4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', Arial, sans-serif; background: #f0f2f5; color: #1a1a1a; font-size: 13px; }
+
+  /* ── COVER ── */
+  .page-cover {
+    background: linear-gradient(135deg, #C0392B 0%, #7B241C 100%);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 60px 40px;
+    page-break-after: always;
+  }
+  .cover-badge { background: rgba(255,255,255,0.15); color: #fff; padding: 6px 18px;
+    border-radius: 20px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+  .cover-title { color: #fff; font-size: 36px; font-weight: 700; text-align: center; margin-bottom: 12px; }
+  .cover-sub { color: rgba(255,255,255,0.8); font-size: 16px; text-align: center; margin-bottom: 40px; }
+  .cover-info { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px; padding: 28px 36px; color: #fff; max-width: 560px; line-height: 1.8; text-align: center; }
+  .cover-info strong { color: #fca5a5; }
+  .cover-domains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 620px; margin-top: 28px; }
+  .cover-domain { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; padding: 12px 14px; color: #fff; text-align: center; }
+  .cover-domain-icon { font-size: 22px; margin-bottom: 4px; }
+  .cover-domain-label { font-size: 11px; font-weight: 600; }
+
+  /* ── AUDIT PAGE ── */
+  .audit-page { background: #f0f2f5; padding: 30px 40px 40px; page-break-after: always; }
+  .audit-page:last-child { page-break-after: auto; }
+
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    background: #C0392B; color: #fff; border-radius: 8px 8px 0 0;
+    padding: 12px 18px; margin-bottom: 0;
+  }
+  .section-icon { font-size: 20px; }
+  .section-title { font-size: 15px; font-weight: 700; }
+  .section-desc { font-size: 11px; color: rgba(255,255,255,0.8); margin-left: auto; }
+
+  .audit-table { width: 100%; border-collapse: collapse; background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); border-radius: 0 0 8px 8px; overflow: hidden; }
+  .audit-table thead tr { background: #f9f9f9; }
+  .audit-table th { padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 700;
+    color: #555; border-bottom: 2px solid #e5e7eb; text-transform: uppercase; letter-spacing: 0.5px; }
+  .audit-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; font-size: 13px; }
+  .audit-table tr:last-child td { border-bottom: none; }
+  .audit-table tr:nth-child(even) td { background: #fafafa; }
+
+  .critere-label { font-weight: 600; color: #1a1a1a; margin-bottom: 3px; }
+  .critere-desc { font-size: 11px; color: #6b7280; line-height: 1.5; }
+
+  /* Constat Thomas */
+  .constat { font-size: 12px; line-height: 1.5; }
+  .constat-ok { color: #166534; background: #dcfce7; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+  .constat-warn { color: #92400e; background: #fef3c7; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+  .constat-bad { color: #991b1b; background: #fee2e2; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+
+  /* Verdict badges */
+  .verdict { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px;
+    padding: 4px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .verdict-ok { background: #dcfce7; color: #166534; }
+  .verdict-warn { background: #fef3c7; color: #92400e; }
+  .verdict-bad { background: #fee2e2; color: #991b1b; }
+
+  /* Zone saisie élève */
+  .eleve-input { background: #f8f9ff; border: 1px dashed #93c5fd; border-radius: 6px;
+    padding: 8px 10px; min-height: 44px; font-size: 12px; color: #9ca3af; font-style: italic; }
+
+  /* Score recap */
+  .score-section { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 24px 28px; margin-top: 0; }
+  .score-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+  .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .score-card { border-radius: 8px; padding: 14px 16px; text-align: center; }
+  .score-card-num { font-size: 28px; font-weight: 700; }
+  .score-card-label { font-size: 11px; margin-top: 2px; }
+  .score-ok { background: #dcfce7; color: #166534; }
+  .score-warn { background: #fef3c7; color: #92400e; }
+  .score-bad { background: #fee2e2; color: #991b1b; }
+
+  .actions-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .actions-table th { background: #C0392B; color: #fff; padding: 8px 12px; text-align: left; }
+  .actions-table td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; line-height: 1.5; }
+  .actions-table tr:nth-child(even) td { background: #fafafa; }
+  .priorite { display: inline-block; width: 22px; height: 22px; border-radius: 50%;
+    background: #C0392B; color: #fff; font-size: 11px; font-weight: 700;
+    text-align: center; line-height: 22px; margin-right: 6px; }
+
+  .enseignant-box { background: #1f2937; color: #fff; border-radius: 8px; padding: 14px 18px; margin-top: 24px; }
+  .enseignant-box-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #fca5a5; }
+  .enseignant-box ul { padding-left: 18px; line-height: 1.9; font-size: 12px; color: #d1d5db; }
+
+  @media print {
+    body { background: #fff; }
+    .audit-page { background: #fff; padding: 20px; }
+    .page-cover { background: #C0392B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ COUVERTURE ══════════ -->
+<div class="page-cover">
+  <div class="cover-badge">⚠️ Document fictif — Usage pédagogique uniquement</div>
+  <div class="cover-title">Grille d'audit numérique</div>
+  <div class="cover-sub">Thomas Renard · Technicien CIEL (personnage fictif) · Séance 4</div>
+  <div class="cover-info">
+    Tu vas réaliser l'<strong>audit de sécurité numérique</strong> du profil de Thomas Renard.<br>
+    Pour chaque critère, observe les informations disponibles sur son profil fictif,<br>
+    puis note ton verdict et tes observations dans les cases prévues.
+  </div>
+  <div class="cover-domains">
+    <div class="cover-domain"><div class="cover-domain-icon">🔐</div><div class="cover-domain-label">Mots de passe &amp; authentification</div></div>
+    <div class="cover-domain"><div class="cover-domain-icon">🌐</div><div class="cover-domain-label">Données exposées en ligne</div></div>
+    <div class="cover-domain"><div class="cover-domain-icon">💼</div><div class="cover-domain-label">Image professionnelle</div></div>
+    <div class="cover-domain"><div class="cover-domain-icon">🕵️</div><div class="cover-domain-label">Exposition aux fuites</div></div>
+    <div class="cover-domain"><div class="cover-domain-icon">📱</div><div class="cover-domain-label">Réseaux sociaux &amp; confidentialité</div></div>
+    <div class="cover-domain"><div class="cover-domain-icon">📋</div><div class="cover-domain-label">Synthèse &amp; actions correctives</div></div>
+  </div>
+</div>
+
+<!-- ══════════ DOMAINE 1 — MOTS DE PASSE ══════════ -->
+<div class="audit-page">
+  <div style="margin-bottom:28px;">
+    <div class="section-header">
+      <span class="section-icon">🔐</span>
+      <span class="section-title">Domaine 1 — Mots de passe et authentification</span>
+      <span class="section-desc">3 critères</span>
+    </div>
+    <table class="audit-table">
+      <thead><tr>
+        <th style="width:28%;">Critère</th>
+        <th style="width:30%;">Ce qu'on observe chez Thomas</th>
+        <th style="width:14%;">Verdict</th>
+        <th style="width:28%;">Mes observations (à remplir)</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="critere-label">1.1 — Pseudo utilisé</div>
+            <div class="critere-desc">Le pseudo est-il identique sur plusieurs plateformes ?</div></td>
+          <td><div class="constat"><span class="constat-bad">thomas.rn69</span> utilisé sur Instagram. Même identifiant <span class="constat-warn">Thomas_R69</span> sur le forum technique. Facilement relier les deux.</div></td>
+          <td><span class="verdict verdict-bad">⚠ Risqué</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">1.2 — Double authentification</div>
+            <div class="critere-desc">Thomas a-t-il activé la 2FA sur ses comptes visibles ?</div></td>
+          <td><div class="constat">Aucune mention de 2FA sur son profil LinkedIn ou Instagram. <span class="constat-bad">Non vérifiable = non activé supposé.</span></div></td>
+          <td><span class="verdict verdict-warn">⚠ Inconnu</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">1.3 — Partage de credentials</div>
+            <div class="critere-desc">A-t-il mentionné ou partagé des informations d'accès ?</div></td>
+          <td><div class="constat">Dans son avis Glassdoor, Thomas mentionne avoir vu des <span class="constat-bad">mots de passe clients sur des post-its</span>. Il n'a pas signalé cette pratique non conforme.</div></td>
+          <td><span class="verdict verdict-bad">🚨 Grave</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DOMAINE 2 -->
+  <div>
+    <div class="section-header">
+      <span class="section-icon">🌐</span>
+      <span class="section-title">Domaine 2 — Données exposées en ligne</span>
+      <span class="section-desc">3 critères</span>
+    </div>
+    <table class="audit-table">
+      <thead><tr>
+        <th style="width:28%;">Critère</th>
+        <th style="width:30%;">Ce qu'on observe chez Thomas</th>
+        <th style="width:14%;">Verdict</th>
+        <th style="width:28%;">Mes observations (à remplir)</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="critere-label">2.1 — Données personnelles publiques</div>
+            <div class="critere-desc">Quelles infos personnelles sont accessibles sans connexion ?</div></td>
+          <td><div class="constat">LinkedIn public : nom complet, ville, établissement scolaire, dates de stage. Instagram public : ville, habitudes, fréquentation de lieux.</div></td>
+          <td><span class="verdict verdict-warn">⚠ À surveiller</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">2.2 — Données confidentielles divulguées</div>
+            <div class="critere-desc">A-t-il publié des infos qui ne lui appartiennent pas ?</div></td>
+          <td><div class="constat">Avis Glassdoor : mentionne des <span class="constat-bad">pratiques internes de l'entreprise cliente</span> (mots de passe sur post-its). Violation de confidentialité professionnelle.</div></td>
+          <td><span class="verdict verdict-bad">🚨 Grave</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">2.3 — Localisation et routine</div>
+            <div class="critere-desc">Peut-on reconstituer ses habitudes à partir de ses posts ?</div></td>
+          <td><div class="constat">Instagram : soirées au Warehouse Lyon, concerts, anniversaires identifiables. <span class="constat-warn">Routine partiellement reconstituable.</span></div></td>
+          <td><span class="verdict verdict-warn">⚠ À surveiller</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ DOMAINE 3 + 4 ══════════ -->
+<div class="audit-page">
+  <div style="margin-bottom:28px;">
+    <div class="section-header">
+      <span class="section-icon">💼</span>
+      <span class="section-title">Domaine 3 — Image professionnelle</span>
+      <span class="section-desc">3 critères</span>
+    </div>
+    <table class="audit-table">
+      <thead><tr>
+        <th style="width:28%;">Critère</th>
+        <th style="width:30%;">Ce qu'on observe chez Thomas</th>
+        <th style="width:14%;">Verdict</th>
+        <th style="width:28%;">Mes observations (à remplir)</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="critere-label">3.1 — Cohérence LinkedIn / réseaux perso</div>
+            <div class="critere-desc">L'image pro et l'image perso sont-elles compatibles ?</div></td>
+          <td><div class="constat">LinkedIn : profil sérieux, compétences techniques. Instagram : bio « la fête la nuit », photos de soirées. <span class="constat-bad">Incohérence forte et facilement visible.</span></div></td>
+          <td><span class="verdict verdict-bad">⚠ Risqué</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">3.2 — Ton et registre des publications</div>
+            <div class="critere-desc">Le registre employé est-il adapté à un contexte professionnel ?</div></td>
+          <td><div class="constat">Forum : registre correct, questions techniques pertinentes. <span class="constat-ok">Point positif.</span> Instagram et Glassdoor : registre familier, commentaire négatif public non maîtrisé.</div></td>
+          <td><span class="verdict verdict-warn">⚠ Mitigé</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">3.3 — Avis négatif public sur un employeur</div>
+            <div class="critere-desc">A-t-il publié des critiques identifiables sur un employeur ?</div></td>
+          <td><div class="constat">Avis Glassdoor signé « Thomas R. » avec poste et dates identifiables. <span class="constat-bad">Directement relier à son LinkedIn. L'entreprise menace de poursuites.</span></div></td>
+          <td><span class="verdict verdict-bad">🚨 Grave</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DOMAINE 4 -->
+  <div>
+    <div class="section-header">
+      <span class="section-icon">🕵️</span>
+      <span class="section-title">Domaine 4 — Exposition aux fuites de données</span>
+      <span class="section-desc">2 critères</span>
+    </div>
+    <table class="audit-table">
+      <thead><tr>
+        <th style="width:28%;">Critère</th>
+        <th style="width:30%;">Ce qu'on observe chez Thomas</th>
+        <th style="width:14%;">Verdict</span></th>
+        <th style="width:28%;">Mes observations (à remplir)</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="critere-label">4.1 — Vérification haveibeenpwned</div>
+            <div class="critere-desc">L'adresse email ou le pseudo a-t-il été compromis dans une fuite connue ?</div></td>
+          <td><div class="constat">Simulation : le pseudo <strong>Thomas_R69</strong> et l'adresse fictive associée apparaissent dans <span class="constat-bad">2 fuites de données référencées</span> (forum piraté en 2022, service de streaming en 2023).</div></td>
+          <td><span class="verdict verdict-bad">🚨 Compromis</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">4.2 — Réutilisation probable du mot de passe</div>
+            <div class="critere-desc">Si un compte a été compromis, le risque se propage-t-il ?</div></td>
+          <td><div class="constat">Pseudo identique sur forum et Instagram. Si le mot de passe est le même sur les deux (pratique courante), <span class="constat-bad">toute compromission se propage à l'ensemble des comptes.</span></div></td>
+          <td><span class="verdict verdict-bad">🚨 Grave</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ DOMAINE 5 + SYNTHÈSE ══════════ -->
+<div class="audit-page">
+  <div style="margin-bottom:28px;">
+    <div class="section-header">
+      <span class="section-icon">📱</span>
+      <span class="section-title">Domaine 5 — Réseaux sociaux et confidentialité</span>
+      <span class="section-desc">3 critères</span>
+    </div>
+    <table class="audit-table">
+      <thead><tr>
+        <th style="width:28%;">Critère</th>
+        <th style="width:30%;">Ce qu'on observe chez Thomas</th>
+        <th style="width:14%;">Verdict</th>
+        <th style="width:28%;">Mes observations (à remplir)</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="critere-label">5.1 — Paramètres de confidentialité</div>
+            <div class="critere-desc">Les comptes sont-ils publics ou privés ?</div></td>
+          <td><div class="constat">Instagram : <span class="constat-bad">compte public</span>, accessible sans connexion. LinkedIn : public par choix (normal). Le problème est le contenu Instagram, pas le compte LinkedIn.</div></td>
+          <td><span class="verdict verdict-bad">⚠ Risqué</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">5.2 — Séparation vie pro / vie perso</div>
+            <div class="critere-desc">Thomas distingue-t-il clairement ses usages professionnels et personnels ?</div></td>
+          <td><div class="constat">Aucune séparation : même pseudo partiel, profils reliables en quelques clics. <span class="constat-bad">Un recruteur peut passer de LinkedIn à Instagram en 30 secondes.</span></div></td>
+          <td><span class="verdict verdict-bad">🚨 Grave</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+        <tr>
+          <td><div class="critere-label">5.3 — Commentaires et interactions publiques</div>
+            <div class="critere-desc">Ses commentaires publics sont-ils maîtrisés ?</div></td>
+          <td><div class="constat">Commentaire public sous une photo de boîte de nuit (<span class="constat-bad">« rentré à 3h du mat »</span>). Ce commentaire apparaît dans les résultats Google.</div></td>
+          <td><span class="verdict verdict-bad">⚠ Risqué</span></td>
+          <td><div class="eleve-input">Note ici ce que tu en penses…</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SYNTHÈSE -->
+  <div class="score-section">
+    <div class="score-title">📊 Synthèse de l'audit — À compléter</div>
+    <div class="score-grid">
+      <div class="score-card score-ok">
+        <div class="score-card-num">__</div>
+        <div class="score-card-label">✅ Critères satisfaisants</div>
+      </div>
+      <div class="score-card score-warn">
+        <div class="score-card-num">__</div>
+        <div class="score-card-label">⚠️ Critères à surveiller</div>
+      </div>
+      <div class="score-card score-bad">
+        <div class="score-card-num">__</div>
+        <div class="score-card-label">🚨 Critères problématiques</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px;">
+      Mes 5 actions correctives prioritaires (à reporter dans la fiche élève) :
+    </div>
+    <table class="actions-table">
+      <tr><th style="width:5%;">#</th><th style="width:40%;">Action corrective</th><th>Justification technique (lien avec les notions CIEL)</th></tr>
+      <tr>
+        <td><span class="priorite">1</span></td>
+        <td style="background:#fff8f8;"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="priorite">2</span></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="priorite">3</span></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="priorite">4</span></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="priorite">5</span></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+    <div class="enseignant-box" style="margin-top:20px;">
+      <div class="enseignant-box-title">🔒 Corrigé enseignant — Actions correctives attendues</div>
+      <ul>
+        <li>Passer le compte Instagram en <strong>privé</strong> et supprimer les publications compromettantes</li>
+        <li>Utiliser des <strong>pseudos différents</strong> sur chaque plateforme pour éviter le croisement de données</li>
+        <li>Activer la <strong>double authentification (2FA)</strong> sur tous les comptes (LinkedIn, Instagram, messagerie)</li>
+        <li><strong>Changer les mots de passe</strong> des comptes compromis (fuites haveibeenpwned) et utiliser un gestionnaire</li>
+        <li>Ne jamais publier d'informations confidentielles sur un employeur, même après la fin du stage (<strong>devoir de confidentialité</strong>)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
